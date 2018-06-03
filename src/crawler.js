@@ -54,7 +54,7 @@ module.exports = function (modernizrPath) {
 			}
 			// If it's not JS, assume it's CSS (or similar, e.g.: LESS, SCSS) files
 			else {
-				prefix = settings.classPrefix || '';
+				prefix = settings.cssprefix || '';
 				// When no prefix, match usage such as: .classname --or-- .no-classname
 				// When prefix set, match usage such as: .<prefix>classname --or-- .<prefix>no-classname
 				regExp = new RegExp("(?:\\." + prefix + ")(?:no-)?(" + type + ")(?![\\w-])", "gm");
@@ -209,7 +209,7 @@ module.exports = function (modernizrPath) {
 					return test.path;
 				}).indexOf(test) === -1;
 			}).concat(settings.customTests.map(function (test) {
-				return path.relative(buildPath, fs.realpathSync(test));
+				return path.relative(path.join(buildPath, '..', 'src', 'test'), fs.realpathSync(test)).replace(new RegExp('\\\\', 'g'), path.posix.sep);
 			}));
 
 			metadata = metadata.filter(function (data) {
