@@ -9,6 +9,7 @@
 			"testProp",
 			"fnBind"
 		],
+        "quiet": false,
 		"uglify" : true,
 		"tests" : [],
 		"excludeTests": [],
@@ -26,7 +27,7 @@
 	},
 	"private": {
 		"url" : {
-			"github" : "https://github.com/doctyper/grunt-modernizr",
+			"github" : "https://github.com/Modernizr/grunt-modernizr",
 			"domain" : "http://modernizr.com"
 		}
 	}

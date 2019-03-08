@@ -1,16 +1,10 @@
-/* jshint node: true */
 module.exports = function (modernizrPath) {
 	"use strict";
 
-	var argv = require("optimist").argv;
-
-	// Config object
-	var _quiet = argv.quiet,
-		_verbose = argv.verbose;
+	var _ = require("lodash");
 
 	// Dependencies
-	var cp = require("child_process"),
-		fs = require("fs"),
+	var fs = require("fs"),
 		cwd = process.cwd(),
 		path = require("path");
 
@@ -107,7 +101,7 @@ module.exports = function (modernizrPath) {
 
 			var matchedTests = this.matchedTestsInFile[file];
 
-			if (!_quiet && matchedTests && matchedTests.length) {
+			if (!settings.quiet && matchedTests && matchedTests.length) {
 				utils.log.writeln();
 
 				var testCount = matchedTests.length;
@@ -168,6 +162,9 @@ module.exports = function (modernizrPath) {
 
 			var tests = settings.tests.map(function (test) {
 				var data = metadata.filter(function (data) {
+					if (Array.isArray(test)) {
+						return test.indexOf(data) !== -1 || _.isEqual(test, data.property);
+					}
 					return data.property === test;
 				});
 
@@ -176,7 +173,7 @@ module.exports = function (modernizrPath) {
 				return test.path;
 			});
 
-			if (!_quiet && tests && tests.length) {
+			if (!settings.quiet && tests && tests.length) {
 				utils.log.writeln();
 				utils.log.ok("Explicitly including these tests:");
 				utils.log.ok(tests.map(function (test) {
@@ -186,7 +183,11 @@ module.exports = function (modernizrPath) {
 
 			var excludedTests = settings.excludeTests.map(function (test) {
 				var data = metadata.filter(function (data) {
-					return data.property === test;
+					if (Array.isArray(data.property)) {
+                        			return data.property.indexOf(test) !== -1;
+                    			} else {
+                        			return data.property === test;
+                    			}
 				});
 
 				return data[0] || {};
@@ -194,7 +195,7 @@ module.exports = function (modernizrPath) {
 				return test.path;
 			});
 
-			if (!_quiet && excludedTests && excludedTests.length) {
+			if (!settings.quiet && excludedTests && excludedTests.length) {
 				utils.log.writeln();
 				utils.log.ok("Explicitly excluding these tests:");
 				utils.log.ok(excludedTests.map(function (test) {
@@ -221,7 +222,7 @@ module.exports = function (modernizrPath) {
 			if (settings.crawl !== true && settings.useBuffers !== true) {
 				tests = this.crawler.filterTests(tests);
 
-				if (!_quiet) {
+				if (!settings.quiet) {
 					utils.log.subhead("Skipping file traversal");
 				}
 
@@ -232,7 +233,7 @@ module.exports = function (modernizrPath) {
 				return deferred.promise;
 			}
 
-			if (!_quiet) {
+			if (!settings.quiet) {
 				utils.log.subhead("Looking for Modernizr references");
 			}
 

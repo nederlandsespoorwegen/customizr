@@ -1,6 +1,6 @@
 # customizr
 
-[![Build Status](https://api.travis-ci.org/Modernizr/customizr.png?branch=master,develop)](https://travis-ci.org/doctyper/customizr)
+[![Build Status](https://api.travis-ci.org/Modernizr/customizr.png?branch=master,develop)](https://travis-ci.org/Modernizr/customizr)
 
 [![NPM](https://nodei.co/npm/customizr.png?compact=true)](https://nodei.co/npm/customizr/)
 
@@ -11,6 +11,36 @@
 This configurable task allows you to configure and export a custom Modernizr build. Use Modernizr's [annotated source](http://modernizr.com/downloads/modernizr-latest.js) for development, and let this tool worry about optimization.
 
 When you're ready to build, `customizr` will crawl your project for Modernizr test references and save out a minified, uglified, customized version using only the tests you've used in your JavaScript or (S)CSS.
+
+## Example
+
+### CSS / SCSS / LESS
+
+When going through css files, the crawler will not look for `display: flex` but rather if the code contains a css selector that is named like the Modernizr properties
+
+```
+.flexbox {
+  ...
+}
+```
+
+or
+
+```
+.no-flexbox {
+  ...
+}
+```
+
+### Javascript
+
+When going through javascript files, the crawler will look for Modernizr calls like this one:
+
+```
+if (!Modernizr.flexbox) {
+  ...
+}
+```
 
 ## Use with Grunt
 
@@ -61,8 +91,7 @@ A sample config file is below. Default values shown:
 		"setClasses",
 		"addTest",
 		"html5printshiv",
-		"testProp",
-		"fnBind"
+		"testProp"
 	],
 
 	// By default, source is uglified before saving
@@ -93,7 +122,10 @@ A sample config file is below. Default values shown:
 	},
 
 	// Have custom Modernizr tests? Add them here.
-	"customTests" : []
+	"customTests" : [],
+	
+	// Add custom prefix to Modernizr CSS classes
+	"classPrefix" : '' 
 }
 ```
 
@@ -151,6 +183,11 @@ Have custom Modernizr tests? Add paths to their location here. The object suppor
 
 This is an optional parameter.
 
+###### **`classPrefix`** (String, optional)
+Add custom prefix to Modernizr classes to avoid clashes with your preexisting class names.
+
+This is an optional parameter.
+
 ## Caching
 
 For large projects, building a custom Modernizr file can be an expensive task. `customizr` does its best to avoid unnecessary builds by following a set criteria. When all of the following are met, it assumes that no changes are necessary:
@@ -188,8 +225,7 @@ var settings = {
 		"setClasses",
 		"addTest",
 		"html5printshiv",
-		"testProp",
-		"fnBind"
+		"testProp"
 	],
 	"uglify" : true,
 	"tests" : [],

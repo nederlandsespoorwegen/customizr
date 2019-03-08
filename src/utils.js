@@ -1,4 +1,3 @@
-/* jshint node: true */
 module.exports = function (modernizrPath) {
 	"use strict";
 
@@ -6,10 +5,10 @@ module.exports = function (modernizrPath) {
 	var fs = require("fs"),
 		path = require("path"),
 		glob = require("glob"),
-		equal = require("deep-equal"),
-		colors = require("colors"),
+        colors = require("colors"),
+        equal = require("fast-deep-equal"),
 		mkdirp = require("mkdirp"),
-		_ = require("underscore");
+		_ = require("lodash");
 
 	// Lovingly lifted verbatim from Grunt: https://github.com/gruntjs/grunt/blob/master/lib/grunt/file.js
 	//
@@ -45,7 +44,7 @@ module.exports = function (modernizrPath) {
 	};
 
 	return {
-		_ : require("underscore"),
+		_ : require("lodash"),
 
 		file : {
 			delete : function (filepath) {
